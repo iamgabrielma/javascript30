@@ -60,8 +60,9 @@
 	//window.addEventListener(type, listener);
 	window.addEventListener('keydown', function(event){
 		//console.log(event);
-		console.log(event.keyCode);
+		//console.log(event.keyCode);
 		//element = document.querySelector(selector);
+		
 		/* 
 		
 		1) audio selector:
@@ -75,10 +76,46 @@
 
 		*/
 		const audio = document.querySelector(`audio[data-key="${event.keyCode}"]`);
+		const key = document.querySelector(`.key[data-key="${event.keyCode}"]`);
 
-		console.log(audio);
+		//console.log(audio);
+		if (!audio) {
+			return; // stop the function from running all together
+		} else {
+			audio.currentTime = 0; //rewind to the start so doesn't get stuck when we call the function as is playing
+			audio.play();
 
+			/* Visual effect on the played key via classList.add()
+			//https://developer.mozilla.org/en/docs/Web/API/Element/classList
+
+			1) We add the .playing class to key, so it add the CSS visual effect when pressed, the problem now is the effect must go away too and if we add a setTimeOut function, we have to be double checking the transition parameter on the CSS and the timeOut function in the JS and be sure they fit all the time, so we'll go with another solution
+			*/
+			key.classList.add('playing');
+
+		}
 	});
+
+	/*
+	2) We'll select all the items with the .key class, add the transitionend class to them and run the function removeTransition()
+
+	*/
+	function removeTransition(event){
+		
+		/*
+		console.log(event);
+		'this' are six things happening attached to the event listener "transitioned": border-bottom-color, border-left-color, border-right-color, tborder-top-colorop, box-shadow and transform. We want to take just the right one, transform.
+		*/
+		if (event.propertyName !== 'transform') {
+			return;
+		} else {
+			this.classList.remove('playing');
+		}
+
+	}
+	const keys = document.querySelectorAll('.key');	
+	
+	keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+	
 
 </script>
 
