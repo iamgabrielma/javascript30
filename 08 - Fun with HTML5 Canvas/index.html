@@ -14,7 +14,7 @@ const ctx = canvas.getContext('2d');
 const width = canvas.innerWidth;
 const height = canvas.innerHeight;
 
-ctx.strokeStyle = '#000';//color
+ctx.strokeStyle = '#000';//color // will be variable on draw();
 ctx.lineJoin = 'cap';
 ctx.lineCap = 'cap';
 
@@ -22,10 +22,9 @@ let isDrawing = false; // by default our cursor does not paint, just when we cli
 /* ending x and y , we need 2 coordinates when we draw lines*/
 let lastX = 0;
 let lastY = 0;
-
 /* crazyness color rainbows and unicors start here 1/3. See strokeStyle = hsl() , www.css3.info/preview/hsl/ */
 let hue = 0
-
+let direction = true;
 // whenever my mouse is moved and down, is going to call the draw() function
 function draw(e){
 	if (!isDrawing) {
@@ -34,6 +33,7 @@ function draw(e){
 		console.log(e);
 		/* unicorns and rainbows 2/3*/
 		ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+		ctx.lineWidth = hue;
 		// ctx is where we do all our canvas drawing work, so we need a path now for show the drawings:
 		ctx.beginPath();
 		// start from:
@@ -47,6 +47,18 @@ function draw(e){
 		/* also ES6 trick for set variables, the above is the same as [lastX, lastY] = [e.offsetX, e.offsetY] , destructuring an array*/
 		/* unicorns 3/3*/
 		hue++;
+		if (hue >= 360) {
+			hue = 0;
+		}
+		/*make the stroke not increase infinitely when moving and clicking around, but change its direction instead, the lineWidth moves from 1 to 100 and once reaches 100, goes back from 99 to 1, flips the direction, depends on which direction goes we increment or decrease the line */
+		if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+			direction = !direction;
+		}
+		if (direction) {
+			ctx.lineWidth++;
+		} else {
+			ctx.lineWidth--;
+		}
 	}
 }
 
