@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
+</head>
+<body>
+<script>
+
+const pressed = [];
+const secretCodeEnabled = 'secret';
+
+window.addEventListener('keyup', (e) => {
+	console.log(e.key);
+	pressed.push(e.key);
+	// We do not want a keylogger, but limit it to the secretCode, we need to start from the end, not the start
+	const secretCodeCheckerA = - secretCodeEnabled.length - 1;
+	const secretCodeCheckerB = pressed.length - secretCodeEnabled.length;
+
+	pressed.splice(secretCodeCheckerA, secretCodeCheckerB);
+
+	// check if array contains the secret code
+	if (pressed.join('').includes(secretCodeEnabled)) {
+		console.log('unlocked!');
+		cornify_add();
+	}
+
+
+	console.log(pressed);
+});
+</script>
+</body>
+</html>
