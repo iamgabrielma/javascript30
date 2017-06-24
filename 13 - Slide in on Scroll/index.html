@@ -43,6 +43,7 @@
   </div>
 
   <script>
+  // debouce() takes a function and returns a new version of the function, that won't be executes until it has not been invoked for wait() milisconds. Example: a function is trigered each time an user clicks a key, this function only will execute once and after they stop they're typing, it can be executed again.
     function debounce(func, wait = 20, immediate = true) {
       var timeout;
       return function() {
@@ -57,6 +58,31 @@
         if (callNow) func.apply(context, args);
       };
     }
+
+    const sliderImages = document.querySelectorAll('.slide-in');
+
+    function checkSlide(e){
+      //console.count(e);
+      //console.log(window.scrollY); // How much you scrolled down from the top of the browser, however we need to know it from the bottom:
+      sliderImages.forEach(sliderImage => {
+        // half way through the image
+        const slideInAt = (window.scrollY + window.innerHeight) - sliderImage.height / 2;
+        // bottom of the image
+        const imageBottom = sliderImage.offsetTop + sliderImage.height;
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+
+        if (isHalfShown && isNotScrolledPast) {
+          sliderImage.classList.add('active');
+        } else {
+          sliderImage.classList.remove('active');
+        }
+
+      });
+    }
+
+    // We wrap our call to wrapSlide() with debounce() so runs lot lesser times compared to before when we scroll down on the screen
+    window.addEventListener('scroll', debounce(checkSlide));
 
   </script>
 
