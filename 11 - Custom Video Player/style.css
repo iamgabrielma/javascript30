@@ -89,7 +89,9 @@ body {
   width:50%;
   background:#ffc600;
   flex:0;
-  flex-basis:50%;
+  /* progress_filled will start on 0% and update via JS on timeupdate event listener at handleProgress()
+  flex-basis:50%;*/
+  flex-basis:0%;
 }
 
 /* unholy css to style input type="range" */
