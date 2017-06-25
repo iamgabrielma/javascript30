@@ -30,7 +30,7 @@
   const itemsList = document.querySelector('.plates');
   const items = [];
 
-
+  /* Add items submitted via the form into an object*/
   function addItem(e){
     //console.log('adding item...' + e);
     e.preventDefault(); // so we stay in the same page, no reload on submit
@@ -40,10 +40,36 @@
     const item = {
       text: text,
       done: false
-    }
+    };
+    // adding it to the items array
+    items.push(item);
+    
+    /* 
+    param1: items     Array of items that had been added via the submit form
+    param2: itemsList Selector where the items entered via `items` and passed through `populatedList()` will show up
+    */
+    populateList(items, itemsList);
+    
+    // resets the entered info in the field form
+    this.reset();
 
-    console.log(item);
+    // Logging what's happening into the console:
+    console.log(item.text + " added!");
+    console.table(items);
   }
+
+  /* Add submitted items to a list in the front-end*/
+  function populateList( plates = [] , platesList){
+    platesList.innerHTML = plates.map((plate, i) => {
+      return `
+      <li>
+        <label for=""> ${plate.text} </label>
+      </li>
+      `
+    }).join('');
+
+  }
+
   // Why listen for "submit" instead of click the submit button? Covers more bases, as somebody can just press enter instead of clicking
   addItems.addEventListener('submit', addItem);
 
