@@ -28,7 +28,9 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  
+  // Initializing items here as an empty array works until we need to save the items between sessions into localstorage, as when we call the function populateList() outside of addItem(), items is an empty on new page loads, now instead, if isn't there, it will fall back to an empty array but first will check the localstorage to see if there's something saved
+  const items = JSON.parse(localStorage.getItem('items')) || [];
 
   /* Add items submitted via the form into an object*/
   function addItem(e){
@@ -50,6 +52,9 @@
     */
     populateList(items, itemsList);
     
+    // Stringify items and save them into local storage, otherwise would show as [Object object]
+    localStorage.setItem('items', JSON.stringify(items));
+
     // resets the entered info in the field form
     this.reset();
 
@@ -58,20 +63,24 @@
     console.table(items);
   }
 
-  /* Add submitted items to a list in the front-end*/
+  /* Add submitted items to a list in the front-end, also adds a checkbox to the side of each item with a svg icon */
   function populateList( plates = [] , platesList){
     platesList.innerHTML = plates.map((plate, i) => {
       return `
       <li>
-        <label for=""> ${plate.text} </label>
+        <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : '' }/>
+        <label for="item${i}"> ${plate.text} </label>
       </li>
       `
-    }).join('');
+    }).join(''); // So the output will be an unique HTML string
 
   }
 
   // Why listen for "submit" instead of click the submit button? Covers more bases, as somebody can just press enter instead of clicking
   addItems.addEventListener('submit', addItem);
+
+  // Get items from local storage entered previously
+  populateList(items, itemsList);
 
 </script>
 
