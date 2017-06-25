@@ -30,6 +30,23 @@
   const itemsList = document.querySelector('.plates');
   const items = [];
 
+
+  function addItem(e){
+    //console.log('adding item...' + e);
+    e.preventDefault(); // so we stay in the same page, no reload on submit
+    // We're grabbing what's on the text field and getting its value property
+    const text = (this.querySelector('[name=item]')).value;
+    // and pass this text property to an object we can store somewhere
+    const item = {
+      text: text,
+      done: false
+    }
+
+    console.log(item);
+  }
+  // Why listen for "submit" instead of click the submit button? Covers more bases, as somebody can just press enter instead of clicking
+  addItems.addEventListener('submit', addItem);
+
 </script>
 
 
