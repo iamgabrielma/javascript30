@@ -76,8 +76,22 @@
 
   }
 
+  function toggleDone(e){
+    console.log(e.target); // We click on 2 items, label + checkbox where we want, or any other item elsewhere, but we need to filter it down to just the input:
+    if (!e.target.matches('input')) return; // skip this unless is 'input'
+    const el = e.target;
+    //console.log(el.dataset.index)
+    const index = el.dataset.index;
+    items[index].done = !items[index].done; // is is true we set it to false, and the other way around
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+  }
+
   // Why listen for "submit" instead of click the submit button? Covers more bases, as somebody can just press enter instead of clicking
   addItems.addEventListener('submit', addItem);
+
+  // This event listener implies event delegation, as the list of items is populated after this is triggered < populateList() > , it won't work. Also, if we move the listener to work after < populateList() > runs, it will just work for the created items, but if we add additional ones won't work again. We'll be delegating the event listener from <ul> (that exists all the time) into <li> (that might be created on the fly)
+  itemsList.addEventListener('click', toggleDone);
 
   // Get items from local storage entered previously
   populateList(items, itemsList);
